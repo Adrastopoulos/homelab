@@ -1,0 +1,126 @@
+import:
+  - homelab/prod/_defaults
+  - catalog/proxmox
+
+components:
+  terraform:
+    # Proxmox instances (connection config)
+    proxmox-instances:
+      metadata:
+        component: "proxmox-instances"
+        inherits:
+          - "proxmox-instances"
+      vars:
+        proxmox_api_token_id: "ansible@pve!homelab"
+        # Token secret should be set via environment variable
+
+    # Storage pools
+    proxmox-storage:
+      metadata:
+        component: "proxmox-storage"
+        inherits:
+          - "proxmox-storage"
+      vars:
+        proxmox_api_token_id: "ansible@pve!homelab"
+        storage_pools:
+          docker-data:
+            type: "zfs"
+            pool: "docker-data"
+            content: ["images", "rootdir"]
+            nodes: ["pve1", "pve2"]
+          vm-storage:
+            type: "zfs"
+            pool: "vm-storage"
+            content: ["images", "rootdir", "vztmpl"]
+            nodes: ["pve1", "pve2"]
+          backup-storage:
+            type: "directory"
+            path: "/mnt/backups"
+            content: ["backup"]
+            nodes: ["pve1", "pve2"]
+            shared: true
+
+    # LXC containers
+    proxmox-lxc:
+      metadata:
+        component: "proxmox-lxc"
+        inherits:
+          - "proxmox-lxc"
+      vars:
+        proxmox_api_token_id: "ansible@pve!homelab"
+        lxc_containers:
+          docker-host:
+            node: "pve1"
+            ostemplate: "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
+            password: "changeme" # Use SSH keys in production
+            ssh_public_keys: |
+              # Add your SSH public key here
+            cores: 4
+            memory: 4096
+            swap: 2048
+            disk: "50G"
+            storage: "docker-data"
+            network:
+              name: "eth0"
+              bridge: "vmbr0"
+              ip: "192.168.10.100/24"
+              gw: "192.168.10.1"
+            features:
+              nesting: true
+              mount: "nfs;cifs"
+            tags: "docker,homelab,services"
+            start: true
+            onboot: true
+            description: "Docker host for containerized services"
+
+          services-host:
+            node: "pve2"
+            ostemplate: "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
+            password: "changeme"
+            ssh_public_keys: |
+              # Add your SSH public key here
+            cores: 2
+            memory: 2048
+            swap: 1024
+            disk: "30G"
+            storage: "vm-storage"
+            network:
+              name: "eth0"
+              bridge: "vmbr0"
+              ip: "192.168.10.101/24"
+              gw: "192.168.10.1"
+            features:
+              nesting: false
+            tags: "services,homelab,monitoring"
+            start: true
+            onboot: true
+            description: "Services host for monitoring and utilities"
+
+    # VMs (optional - example configurations)
+    proxmox-vms:
+      metadata:
+        component: "proxmox-vms"
+        inherits:
+          - "proxmox-vms"
+      vars:
+        proxmox_api_token_id: "ansible@pve!homelab"
+        vms:
+          # Example VM configurations
+          # k8s-master:
+          #   node: "pve1"
+          #   clone: "ubuntu-22.04-template"
+          #   cores: 2
+          #   memory: 4096
+          #   disk:
+          #     - storage: "vm-storage"
+          #       type: "scsi"
+          #       size: "30G"
+          #       ssd: true
+          #   network:
+          #     - bridge: "vmbr0"
+          #       model: "virtio"
+          #   tags: "kubernetes,master"
+          #   onboot: true
+          #   ciuser: "ubuntu"
+          #   sshkeys: "ssh-rsa AAAA..."
+          #   ipconfig0: "ip=192.168.10.110/24,gw=192.168.10.1"

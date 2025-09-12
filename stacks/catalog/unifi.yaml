@@ -1,0 +1,10 @@
+components:
+  terraform:
+    unifi/defaults:
+      metadata:
+        component: "unifi"
+        type: "abstract"
+      vars:
+        unifi_api_url: "https://192.168.1.1"
+        unifi_allow_insecure: true
+        unifi_site: "default"

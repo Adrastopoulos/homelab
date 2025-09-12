@@ -1,0 +1,13 @@
+import:
+  - homelab/prod/_defaults
+  - catalog/unifi
+
+components:
+  terraform:
+    unifi:
+      metadata:
+        component: "unifi"
+        inherits:
+          - "unifi/defaults"
+      vars:
+        wifi_password: "changeme-wifi-password"

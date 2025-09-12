@@ -1,0 +1,7 @@
+- hosts: grafana
+  roles:
+    - apt_proxy
+    - security
+    - docker
+    - grafana
+    - promtail

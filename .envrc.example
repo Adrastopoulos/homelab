@@ -1,0 +1,9 @@
+# Proxmox API credentials
+export TF_VAR_proxmox_api_token_secret="your-proxmox-api-token-secret"
+export PROXMOX_VE_API_TOKEN="ansible@pve!homelab=your-proxmox-api-token-secret"
+
+# UniFi Controller credentials
+export TF_VAR_unifi_password="your-unifi-controller-password"
+
+# Ansible Vault password (optional)
+export ANSIBLE_VAULT_PASSWORD_FILE=".vault_pass"

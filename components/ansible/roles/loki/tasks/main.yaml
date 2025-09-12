@@ -1,0 +1,44 @@
+- name: Create /etc/loki
+  ansible.builtin.file:
+    path: /etc/loki
+    state: directory
+    mode: "0755"
+
+- name: Configure Loki
+  ansible.builtin.template:
+    src: loki.yml.j2
+    dest: /etc/loki/loki.yml
+    mode: "0644"
+  notify: Restart loki
+
+- name: Create Loki volumes
+  community.docker.docker_volume:
+    volume_name: "{{ item }}"
+  loop:
+    - loki-data
+
+- name: Create Loki container
+  community.docker.docker_container:
+    name: loki
+    image: grafana/loki:latest
+
+    command: -config.file=/etc/loki/config.yml
+
+    volumes:
+      - /etc/loki/loki.yml:/etc/loki/config.yml:ro
+      - loki-data:/loki:rw
+
+    user: 0:0
+
+    ports: "{{ loki_ports | default([]) }}"
+
+    networks: "{{ docker_networks }}"
+    comparisons: "{{ docker_comparisons }}"
+    image_name_mismatch: "{{ docker_image_name_mismatch }}"
+    state: "{{ docker_state }}"
+    restart_policy: "{{ docker_restart_policy }}"
+    pull: "{{ docker_pull }}"
+
+- name: Register Loki container name
+  ansible.builtin.set_fact:
+    loki_container_name: "loki"

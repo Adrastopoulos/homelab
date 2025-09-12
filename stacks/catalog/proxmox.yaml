@@ -1,0 +1,41 @@
+components:
+  terraform:
+    proxmox-instances:
+      metadata:
+        component: "proxmox-instances"
+        type: "abstract"
+      vars:
+        proxmox_api_url: "https://192.168.10.30:8006/api2/json"
+        proxmox_nodes:
+          pve1:
+            address: "192.168.10.30"
+            description: "Primary Proxmox node"
+            tags: ["homelab", "primary"]
+          pve2:
+            address: "192.168.10.31"
+            description: "Secondary Proxmox node" 
+            tags: ["homelab", "secondary"]
+            
+    proxmox-storage:
+      metadata:
+        component: "proxmox-storage"
+        type: "abstract"
+      vars:
+        proxmox_api_url: "https://192.168.10.30:8006/api2/json"
+        storage_pools: {}
+        
+    proxmox-lxc:
+      metadata:
+        component: "proxmox-lxc" 
+        type: "abstract"
+      vars:
+        proxmox_api_url: "https://192.168.10.30:8006/api2/json"
+        lxc_containers: {}
+        
+    proxmox-vms:
+      metadata:
+        component: "proxmox-vms"
+        type: "abstract"
+      vars:
+        proxmox_api_url: "https://192.168.10.30:8006/api2/json"
+        vms: {}

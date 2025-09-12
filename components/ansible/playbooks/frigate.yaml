@@ -1,0 +1,7 @@
+- hosts: frigate
+  roles:
+    - apt_proxy
+    - security
+    - docker
+    - frigate
+    - promtail
