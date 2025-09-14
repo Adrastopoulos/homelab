@@ -9,5 +9,3 @@ components:
         component: "unifi"
         inherits:
           - "unifi/defaults"
-      vars:
-        wifi_password: "changeme-wifi-password"

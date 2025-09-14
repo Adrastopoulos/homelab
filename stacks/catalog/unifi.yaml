@@ -5,6 +5,8 @@ components:
         component: "unifi"
         type: "abstract"
       vars:
-        unifi_api_url: "https://192.168.1.1"
-        unifi_allow_insecure: true
-        unifi_site: "default"
+        unifi_password: !env UNIFI_PASSWORD
+
+        wifi_password: !env WIFI_PASSWORD
+        guest_wifi_password: !env GUEST_WIFI_PASSWORD
+        iot_wifi_password: !env IOT_WIFI_PASSWORD

@@ -1,9 +1,9 @@
 data "unifi_ap_group" "default" {
 }
 
-resource "unifi_wlan" "homelab" {
+resource "unifi_wlan" "main" {
   name          = "mochanet"
-  network_id    = unifi_network.homelab.id
+  network_id    = data.unifi_network.default.id
   security      = "wpapsk"
   passphrase    = var.wifi_password
   user_group_id = data.unifi_user_group.default.id
