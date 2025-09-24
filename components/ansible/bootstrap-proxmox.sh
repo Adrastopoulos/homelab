@@ -13,7 +13,9 @@ systemctl start ssh
 mkdir -p /root/.ssh
 chmod 700 /root/.ssh
 
+HOST_IP=$(hostname -I | awk '{print $1}')
+
 echo "Bootstrap complete - host ready for Ansible management"
 echo "Next steps:"
-echo "1. Add SSH key: ssh-copy-id root@this-host"
+echo "1. Add SSH key: ssh-copy-id root@${HOST_IP}"
 echo "2. Run bootstrap playbook: ansible-playbook playbooks/system/proxmox-bootstrap.yaml"
