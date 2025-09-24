@@ -1,0 +1,8 @@
+- name: Post install script
+  include_tasks: postinstall.yaml
+- name: Install Python packages
+  include_tasks: python.yaml
+- name: Setup Terraform user and permissions
+  include_tasks: terraform.yaml
+- name: Configure system settings
+  include_tasks: system.yaml

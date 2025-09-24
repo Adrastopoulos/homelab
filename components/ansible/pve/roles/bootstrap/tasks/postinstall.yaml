@@ -1,0 +1,13 @@
+- name: Disable enterprise repos
+  copy:
+    content: "# deb https://enterprise.proxmox.com/debian/pve {{ ansible_distribution_release }} pve-enterprise"
+    dest: /etc/apt/sources.list.d/pve-enterprise.list
+
+- name: Enable no-subscription repo
+  copy:
+    content: "deb http://download.proxmox.com/debian/pve {{ ansible_distribution_release }} pve-no-subscription"
+    dest: /etc/apt/sources.list.d/pve-no-subscription.list
+
+- name: Update apt cache
+  apt:
+    update_cache: yes

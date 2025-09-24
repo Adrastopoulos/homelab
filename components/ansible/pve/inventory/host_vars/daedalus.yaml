@@ -1,0 +1,15 @@
+zfs_pools:
+  hermes:
+    name: "hermes"
+    type: "mirror"
+    devices:
+      - ["nvme0n1", "nvme1n1"]
+      - ["nvme2n1", "nvme3n1"]
+    compression: "lz4"
+
+  typhoeus:
+    name: "typhoeus"
+    type: "raidz2"
+    devices: ["sdc", "sdd", "sde", "sdf", "sdg", "sdh", "sdi"]
+    spares: ["sdj"]
+    compression: "lz4"

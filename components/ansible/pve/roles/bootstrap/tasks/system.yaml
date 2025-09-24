@@ -1,0 +1,13 @@
+- name: Ensure SSH key directory exists
+  file:
+    path: /root/.ssh
+    state: directory
+    mode: "0700"
+    owner: root
+    group: root
+
+- name: Upgrade packages
+  apt:
+    upgrade: safe
+    update_cache: yes
+    cache_valid_time: 600
