@@ -38,6 +38,31 @@ ansible-galaxy install -r requirements.yml  --force
 
 All host and group variables are encrypted with Ansible vault, password file is `.vault`.
 
+## Playbook Organization
+
+Playbooks are organized into categories:
+
+- `playbooks/system/` - Infrastructure and system management (Proxmox hosts, networking, etc.)
+- `playbooks/applications/` - Application deployments (Immich, Jellyfin, Grafana, etc.)
+
+## Proxmox Host Setup
+
+Bootstrap new Proxmox hosts:
+
+```bash
+# On the Proxmox host
+./bootstrap-proxmox.sh
+
+# Add SSH key
+ssh-copy-id root@proxmox-host-ip
+
+# Run bootstrap playbook
+ansible-playbook playbooks/system/proxmox-bootstrap.yaml
+
+# Run ongoing management
+ansible-playbook playbooks/system/proxmox-hosts.yaml
+```
+
 ## Ansible commands
 
 Show inventory:
@@ -46,16 +71,23 @@ Show inventory:
 ansible-inventory --graph
 ```
 
+Run system management playbooks:
+
+```bash
+ansible-playbook playbooks/system/proxmox-hosts.yaml
+```
+
+Run application playbooks:
+
+```bash
+ansible-playbook playbooks/applications/immich.yaml
+ansible-playbook -e docker_pull=always playbooks/applications/[playbook]
+```
+
 Update LXC containers:
 
 ```bash
 ansible-playbook playbooks/lxc_upgrade.yml
-```
-
-Update Docker containers:
-
-```bash
-ansible-playbook -e docker_pull=always [playbook]
 ```
 
 Prune Docker dangling images:
