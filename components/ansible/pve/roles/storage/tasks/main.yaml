@@ -1,13 +1,4 @@
-- name: Check existing ZFS pools
-  shell: zpool list {{ item.value.name }}
-  register: pool_exists
-  failed_when: false
-  changed_when: false
-  loop: "{{ zfs_pools | dict2items }}"
-  loop_control:
-    label: "{{ item.value.name }}"
-
-- name: Create mirror pools (RAID10)
+- name: Create mirror ZFS pools
   shell: >
     zpool create {{ item.value.name }}
     {% for mirror_pair in item.value.devices %}
@@ -16,37 +7,33 @@
     {% if item.value.spares is defined %}
     spare {{ item.value.spares | join(' ') }}
     {% endif %}
-  when:
-    - item.value.type == "mirror"
-    - pool_exists.results[loop_index].rc != 0
+  args:
+    creates: "/{{ item.value.name }}"
+  when: item.value.type == "mirror"
   loop: "{{ zfs_pools | dict2items }}"
   loop_control:
-    index_var: loop_index
     label: "{{ item.value.name }}"
 
-- name: Create raidz pools
+- name: Create raidz ZFS pools
   shell: >
     zpool create {{ item.value.name }}
     {{ item.value.type }} {{ item.value.devices | join(' ') }}
     {% if item.value.spares is defined %}
     spare {{ item.value.spares | join(' ') }}
     {% endif %}
-  when:
-    - item.value.type in ["raidz1", "raidz2", "raidz3"]
-    - pool_exists.results[loop_index].rc != 0
+  args:
+    creates: "/{{ item.value.name }}"
+  when: item.value.type in ["raidz1", "raidz2", "raidz3"]
   loop: "{{ zfs_pools | dict2items }}"
   loop_control:
-    index_var: loop_index
     label: "{{ item.value.name }}"
 
-- name: Enable compression on ZFS pools
-  shell: zfs set compression={{ item.value.compression }} {{ item.value.name }}
-  when:
-    - pool_exists.results[loop_index].rc != 0
-    - item.value.compression is defined
+- name: Set ZFS compression on pools
+  shell: zfs set compression={{ item.value.compression | default('lz4') }} {{ item.value.name }}
+  args:
+    creates: "/{{ item.value.name }}/.zfs"
   loop: "{{ zfs_pools | dict2items }}"
   loop_control:
-    index_var: loop_index
     label: "{{ item.value.name }}"
 
 - name: Display ZFS pool status
