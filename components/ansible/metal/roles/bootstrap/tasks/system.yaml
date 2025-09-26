@@ -11,3 +11,12 @@
     upgrade: safe
     update_cache: true
     cache_valid_time: 600
+
+- name: Force TERM to xterm-256color
+  ansible.builtin.copy:
+    dest: /root/.profile.d/99-term.sh
+    content: |
+      export TERM=xterm-256color
+    owner: root
+    group: root
+    mode: "0644"
