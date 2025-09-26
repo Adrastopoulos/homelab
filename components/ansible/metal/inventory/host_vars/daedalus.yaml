@@ -26,3 +26,25 @@ zfs_pools:
       compression: lz4
     pool_properties:
       autoexpand: "on"
+
+zfs_datasets:
+  typhoeus/proxmox_iso:
+    properties:
+      mountpoint: /typhoeus/proxmox_iso
+      compression: lz4
+  typhoeus/proxmox_templates:
+    properties:
+      mountpoint: /typhoeus/proxmox_templates
+      compression: lz4
+
+proxmox_storage:
+  zfs_iso:
+    id: zfs-iso
+    type: dir
+    path: /typhoeus/proxmox_iso
+    content: iso
+  zfs_templates:
+    id: zfs-templates
+    type: dir
+    path: /typhoeus/proxmox_templates
+    content: vztmpl,images

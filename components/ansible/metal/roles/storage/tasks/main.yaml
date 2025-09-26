@@ -15,6 +15,16 @@
   loop_control:
     label: "{{ item.name }}"
 
+- name: Ensure ZFS datasets exist
+  community.general.zfs:
+    name: "{{ item.key }}"
+    state: present
+    extra_zfs_properties: "{{ item.value.properties | default({}) }}"
+  loop: "{{ zfs_datasets | dict2items }}"
+  when: zfs_datasets is defined
+  loop_control:
+    label: "{{ item.key }}"
+
 - name: Inspect ZFS pools
   ansible.builtin.command: zpool status
   register: zpool_status
@@ -23,3 +33,30 @@
 - name: Report ZFS pools
   ansible.builtin.debug:
     var: zpool_status.stdout_lines
+
+- name: Ensure Proxmox storage directories exist
+  ansible.builtin.file:
+    path: "{{ item.value.path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop: "{{ proxmox_storage | dict2items }}"
+  when: proxmox_storage is defined
+  loop_control:
+    label: "{{ item.value.path }}"
+
+- name: Register Proxmox storage entries
+  ansible.builtin.command: >-
+    pvesm add {{ item.value.type }} {{ item.value.id }}
+    --path {{ item.value.path }}
+    --content {{ item.value.content }}
+  register: pvesm_add_result
+  failed_when: >-
+    pvesm_add_result.rc not in [0, 255]
+    or (pvesm_add_result.rc == 255 and 'already defined' not in pvesm_add_result.stderr)
+  changed_when: pvesm_add_result.rc == 0
+  loop: "{{ proxmox_storage | dict2items }}"
+  when: proxmox_storage is defined
+  loop_control:
+    label: "{{ item.value.id }}"

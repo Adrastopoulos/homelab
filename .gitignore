@@ -30,6 +30,7 @@ aws-assumed-role/
 **/*.helmfile.vars.yaml
 **/crash.log
 **/secrets/
+**/*.packer.vars.json
 
 # Module directory
 # Note that the leading "**/" appears necessary for Docker even if not for Git

@@ -9,6 +9,8 @@ components:
     auto_generate_backend_file: false
   ansible:
     base_path: "components/ansible"
+  packer:
+    base_path: "components/packer"
 
 stacks:
   base_path: "stacks"

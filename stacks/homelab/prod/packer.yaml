@@ -1,0 +1,3 @@
+import:
+  - homelab/prod/_defaults
+  - catalog/packer
