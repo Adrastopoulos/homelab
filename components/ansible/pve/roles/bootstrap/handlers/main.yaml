@@ -1,4 +1,0 @@
-- name: restart apt-daily
-  service:
-    name: apt-daily
-    state: restarted

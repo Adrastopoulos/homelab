@@ -1,0 +1,11 @@
+- name: Apply post-install configuration
+  ansible.builtin.import_tasks: postinstall.yaml
+
+- name: Install Python tooling
+  ansible.builtin.import_tasks: python.yaml
+
+- name: Prepare Terraform access
+  ansible.builtin.import_tasks: terraform.yaml
+
+- name: Apply system tuning
+  ansible.builtin.import_tasks: system.yaml

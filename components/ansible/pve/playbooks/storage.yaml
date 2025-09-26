@@ -1,7 +1,0 @@
-- name: Configure ZFS storage pools
-  hosts: pve
-  become: yes
-  gather_facts: yes
-
-  roles:
-    - storage

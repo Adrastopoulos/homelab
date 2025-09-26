@@ -1,0 +1,7 @@
+- name: Configure ZFS storage
+  hosts: metal
+  become: true
+  gather_facts: true
+
+  roles:
+    - storage

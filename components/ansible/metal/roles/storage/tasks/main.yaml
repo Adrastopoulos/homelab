@@ -1,0 +1,25 @@
+- name: Gather existing ZFS pools
+  ansible.builtin.command: zpool list -H -o name
+  register: existing_zpools
+  changed_when: false
+
+- name: Ensure ZFS pools exist when missing
+  community.general.zpool:
+    name: "{{ item.name }}"
+    state: present
+    vdevs: "{{ item.vdevs }}"
+    pool_properties: "{{ item.pool_properties | default({}) }}"
+    filesystem_properties: "{{ item.filesystem_properties | default({}) }}"
+  loop: "{{ zfs_pools }}"
+  when: item.name not in existing_zpools.stdout_lines
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Inspect ZFS pools
+  ansible.builtin.command: zpool status
+  register: zpool_status
+  changed_when: false
+
+- name: Report ZFS pools
+  ansible.builtin.debug:
+    var: zpool_status.stdout_lines

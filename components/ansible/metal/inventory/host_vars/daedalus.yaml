@@ -1,0 +1,28 @@
+ansible_host: 192.168.1.138
+ansible_python_interpreter: /usr/bin/python3
+
+zfs_pools:
+  - name: typhoeus
+    vdevs:
+      - type: raidz2
+        disks:
+          - "wwn-0x5000c50094184c0b"
+          - "wwn-0x5000c500941833e3"
+          - "wwn-0x5000c50094186427"
+          - "wwn-0x5000c50094184b97"
+          - "wwn-0x5000c5009418340b"
+      - type: raidz2
+        disks:
+          - "wwn-0x5000c50094184edb"
+          - "wwn-0x5000c500941e6bd3"
+          - "wwn-0x5000c50094185aaf"
+          - "wwn-0x5000c500941856bb"
+          - "wwn-0x5000c50094184097"
+      - role: spare
+        disks:
+          - "wwn-0x5000c5009418429f"
+          - "wwn-0x5000c500941e703f"
+    filesystem_properties:
+      compression: lz4
+    pool_properties:
+      autoexpand: "on"
