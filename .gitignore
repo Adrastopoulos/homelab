@@ -38,7 +38,6 @@ aws-assumed-role/
 **/.module/
 **/.helmfile/
 
-
 # Draft or auto-saved version
 # Note that the leading "**/" appears necessary for Docker even if not for Git
 **/*.draft.*
@@ -70,5 +69,6 @@ Dockerfile.custom
 
 # Secrets
 *.ovpn
-
 *.zip
+
+**/downloaded_iso_path

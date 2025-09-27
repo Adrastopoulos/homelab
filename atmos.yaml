@@ -23,3 +23,14 @@ stacks:
 logs:
   file: "/dev/stderr"
   level: Info
+
+commands:
+  - name: ansible run
+    description: "Runs an Ansible playbook, allowing extra arguments after --."
+    arguments:
+      - name: playbook
+        description: "The Ansible playbook to run"
+        default: site.yml
+        required: true
+    steps:
+      - "ansible-playbook {{ .Arguments.playbook }} {{ .TrailingArgs }}"

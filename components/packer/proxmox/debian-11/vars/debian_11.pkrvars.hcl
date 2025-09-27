@@ -1,0 +1,15 @@
+proxmox_host      = "192.168.1.138:8006"
+proxmox_node      = "daedalus"
+vmid              = "9000"
+cpu_type          = "kvm64"
+cores             = "2"
+memory            = "2048"
+storage_pool      = "local-lvm"
+disk_size         = "16G"
+disk_format       = "raw"
+network_vlan      = "10"
+
+# these will overwrite variables.pkr.hcl
+# iso_url          = "https://get.debian.org/images/release/current/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso"
+# iso_checksum     = "sha512:224cd98011b9184e49f858a46096c6ff4894adff8945ce89b194541afdfd93b73b4666b0705234bd4dff42c0a914fdb6037dd0982efb5813e8a553d8e92e6f51"
+iso_storage_pool = "zfs-iso"

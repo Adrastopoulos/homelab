@@ -1,39 +1,9 @@
 components:
   packer:
-    packer/proxmox/debian-cloudinit:
+    packer/proxmox/debian-11:
       metadata:
-        component: "proxmox/debian-cloudinit"
+        component: "proxmox/debian-11"
       vars:
-        proxmox_url: !env PROXMOX_URL
-        proxmox_api_token_id: !env PROXMOX_API_TOKEN_ID
-        proxmox_api_token_secret: !env PROXMOX_API_TOKEN_SECRET
-        proxmox_node: daedalus
-        storage_pool: local-lvm
-        iso_storage_pool: zfs-iso
-        iso_url: https://cloud.debian.org/cdimage/archive/12.5.0/amd64/iso-cd/debian-12.5.0-amd64-netinst.iso
-        iso_checksum: sha512:33c08e56c83d13007e4a5511b9bf2c4926c4aa12fd5dd56d493c0653aecbab380988c5bf1671dbaea75c582827797d98c4a611f7fb2b131fbde2c677d5258ec9
-        template_name: debian-12-cloudinit
-        template_description: Debian 12 cloud-init base image
-        vmid: 9000
-        cores: 2
-        memory: 4096
-        disk_size: "32G"
+        proxmox_api_user: !env PROXMOX_USERNAME
+        proxmox_api_password: !env PROXMOX_PASSWORD
 
-    packer/proxmox/ubuntu-jammy-docker:
-      metadata:
-        component: "proxmox/ubuntu-jammy-docker"
-      vars:
-        proxmox_url: !env PROXMOX_URL
-        proxmox_api_token_id: !env PROXMOX_API_TOKEN_ID
-        proxmox_api_token_secret: !env PROXMOX_API_TOKEN_SECRET
-        proxmox_node: daedalus
-        storage_pool: local-lvm
-        iso_storage_pool: zfs-iso
-        iso_url: https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso
-        iso_checksum: !env PROXMOX_UBUNTU_ISO_CHECKSUM
-        template_name: ubuntu-22.04-docker
-        template_description: Ubuntu 22.04 Docker host template
-        vmid: 9100
-        cores: 4
-        memory: 8192
-        disk_size: "64G"
