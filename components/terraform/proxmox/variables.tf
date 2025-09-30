@@ -1,17 +1,19 @@
+variable "proxmox_api_host" {
+  type = string
+  default = "192.168.1.138:8006"
+}
+
 variable "proxmox_api_token_id" {
-  description = "Proxmox API token ID"
   type        = string
-  default     = "root@pam!terraform"
+  default     = "terraform@pve!provider"
 }
 
 variable "proxmox_api_token_secret" {
-  description = "Proxmox API token secret"
   type        = string
   sensitive   = true
 }
 
 variable "container_password" {
-  description = "Docker container password"
   type = string
   sensitive = true
 }
