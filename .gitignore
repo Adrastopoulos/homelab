@@ -65,7 +65,7 @@ Dockerfile.custom
 
 # custom direnv and .env
 .env*
-!.envrc.example
+!.env.example
 
 # Secrets
 *.ovpn
