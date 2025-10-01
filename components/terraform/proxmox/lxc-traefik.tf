@@ -12,7 +12,7 @@ resource "proxmox_lxc" "traefik" {
   swap   = 512
 
   rootfs {
-    storage = "local-lvm"
+    storage = "hermes"
     size    = "8G"
   }
 
@@ -24,7 +24,7 @@ resource "proxmox_lxc" "traefik" {
   }
 
   features {
-    nesting = true  # Required for Docker
+    nesting = true
   }
 
   startup = "order=2,up=30"

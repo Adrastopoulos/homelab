@@ -12,7 +12,7 @@ resource "proxmox_lxc" "adguard" {
   swap   = 512
 
   rootfs {
-    storage = "local-lvm"
+    storage = "hermes"
     size    = "8G"
   }
 
@@ -24,8 +24,7 @@ resource "proxmox_lxc" "adguard" {
   }
 
   features {
-    nesting = true  # Required for Docker
-    # keyctl  = true  # Required for Docker
+    nesting = true
   }
 
   startup = "order=1,up=30"

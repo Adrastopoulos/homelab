@@ -26,6 +26,20 @@ zfs_pools:
       compression: lz4
     pool_properties:
       autoexpand: "on"
+  - name: hermes
+    vdevs:
+      - type: raidz2
+        disks:
+          - "nvme-INTEL_SSDPE2ME012T4_CVMD5162007Z1P2HGN"
+          - "nvme-INTEL_SSDPE2ME012T4_CVMD516400721P2HGN"
+          - "nvme-INTEL_SSDPE2ME012T4_CVMD5162003Z1P2HGN"
+          - "nvme-INTEL_SSDPE2ME012T4_CVMD5130003S1P2HGN"
+    filesystem_properties:
+      compression: lz4
+      atime: "off"
+      recordsize: 8k
+    pool_properties:
+      autoexpand: "on" 
 
 zfs_datasets:
   typhoeus/proxmox_iso:
@@ -48,3 +62,8 @@ proxmox_storage:
     type: dir
     path: /typhoeus/proxmox_templates
     content: vztmpl,images
+  hermes:
+    id: hermes
+    type: zfspool
+    pool: hermes
+    content: rootdir,images
