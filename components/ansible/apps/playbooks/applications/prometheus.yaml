@@ -1,8 +1,0 @@
-- hosts: prometheus
-  roles:
-    - apt_proxy
-    - security
-    - docker
-    - prometheus_pve_exporter
-    - prometheus
-    - promtail

@@ -1,0 +1,52 @@
+---
+- name: Create Traefik directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - /opt/traefik
+    - /opt/traefik/acme
+    - /opt/traefik/config
+
+- name: Generate Traefik configuration
+  template:
+    src: traefik.yml.j2
+    dest: /opt/traefik/traefik.yml
+    mode: "0644"
+  notify: restart traefik
+
+- name: Generate services configuration
+  template:
+    src: services.yml.j2
+    dest: /opt/traefik/services.yml
+    mode: "0644"
+  notify: restart traefik
+
+- name: Create Docker volume for Let's Encrypt certificates
+  community.docker.docker_volume:
+    name: traefik-letsencrypt
+    state: present
+
+- name: Deploy Traefik container
+  community.docker.docker_container:
+    name: traefik
+    image: "traefik:{{ traefik_version }}"
+    state: started
+    restart_policy: unless-stopped
+    pull: yes
+    network_mode: host
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /opt/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - /opt/traefik/services.yml:/etc/traefik/services.yml:ro
+      - traefik-letsencrypt:/letsencrypt
+
+    env:
+      PORKBUN_API_KEY: "{{ traefik_porkbun_api_key }}"
+      PORKBUN_SECRET_API_KEY: "{{ traefik_porkbun_secret_key }}"
+      PORKBUN_PROPAGATION_TIMEOUT: "120"
+      LEGO_DEBUG: "true"
+
+    labels: {}

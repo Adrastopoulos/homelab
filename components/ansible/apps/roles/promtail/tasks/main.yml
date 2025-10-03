@@ -1,0 +1,32 @@
+---
+# Promtail log shipping to Loki
+
+- name: Create Promtail config directory
+  file:
+    path: /etc/promtail
+    state: directory
+    mode: '0755'
+
+- name: Generate Promtail configuration
+  template:
+    src: promtail-config.yaml.j2
+    dest: /etc/promtail/config.yaml
+    mode: '0644'
+  notify: restart promtail
+
+- name: Deploy Promtail container
+  community.docker.docker_container:
+    name: promtail
+    image: "grafana/promtail:{{ promtail_version | default('latest') }}"
+    state: started
+    restart_policy: unless-stopped
+    pull: yes
+
+    volumes:
+      - /etc/promtail:/etc/promtail
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+
+    command: -config.file=/etc/promtail/config.yaml
+
+    # Use default bridge network

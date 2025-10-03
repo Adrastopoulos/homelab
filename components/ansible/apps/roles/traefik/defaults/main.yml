@@ -1,0 +1,5 @@
+---
+traefik_version: "latest"
+
+traefik_http_port: 80
+traefik_https_port: 443

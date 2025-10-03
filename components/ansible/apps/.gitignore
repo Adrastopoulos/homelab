@@ -1,0 +1,31 @@
+# Ansible Vault files
+.vault_pass
+vault.yml
+**/vault.yml
+group_vars/*/vault.yml
+host_vars/*/vault.yml
+
+# Ansible retry files
+*.retry
+
+# Python
+*.pyc
+__pycache__/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*~

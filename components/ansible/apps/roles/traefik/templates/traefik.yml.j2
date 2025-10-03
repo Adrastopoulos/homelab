@@ -1,0 +1,43 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entrypoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    filename: /etc/traefik/services.yml
+    watch: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: {{ traefik_email }}
+      storage: /letsencrypt/acme.json
+      dnsChallenge:
+        provider: {{ traefik_dns_provider }}
+        delayBeforeCheck: 60
+
+log:
+  level: DEBUG
+
+metrics:
+  prometheus:
+    addEntryPointsLabels: true
+    addServicesLabels: true

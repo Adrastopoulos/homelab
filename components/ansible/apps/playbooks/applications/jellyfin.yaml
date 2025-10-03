@@ -1,6 +1,0 @@
-- hosts: jellyfin
-  roles:
-    - apt_proxy
-    - security
-    - docker
-    - jellyfin

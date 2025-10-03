@@ -1,0 +1,8 @@
+---
+- hosts: adguard
+  become: yes
+  roles:
+    - security
+    - docker
+    - grafana-agent
+    - adguard

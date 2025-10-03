@@ -1,0 +1,5 @@
+---
+- name: restart grafana-agent
+  community.docker.docker_container:
+    name: grafana-agent
+    restart: yes

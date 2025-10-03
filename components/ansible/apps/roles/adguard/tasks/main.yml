@@ -1,0 +1,27 @@
+- name: Create AdGuard directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/adguard/conf
+    - /opt/adguard/work
+
+- name: Generate AdGuard configuration
+  template:
+    src: AdGuardHome.yaml.j2
+    dest: /opt/adguard/conf/AdGuardHome.yaml
+    mode: "0644"
+  notify: restart adguard
+
+- name: Deploy AdGuard Home container
+  community.docker.docker_container:
+    name: adguard
+    image: "adguard/adguardhome:{{ adguard_version }}"
+    state: started
+    restart_policy: unless-stopped
+    pull: yes
+    network_mode: host
+
+    volumes:
+      - /opt/adguard/conf:/opt/adguardhome/conf:rw
+      - /opt/adguard/work:/opt/adguardhome/work:rw

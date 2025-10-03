@@ -1,0 +1,50 @@
+http:
+  serversTransports:
+    insecure:
+      insecureSkipVerify: true
+
+  routers:
+    adguard:
+      rule: "Host(`adguard.hallway.dev`)"
+      service: adguard-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+    traefik:
+      rule: "Host(`traefik.hallway.dev`)"
+      service: traefik-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+    daedalus:
+      rule: "Host(`daedalus.hallway.dev`)"
+      service: daedalus
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+    monitoring:
+      rule: "Host(`monitoring.hallway.dev`)"
+      service: monitoring-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+
+  services:
+    adguard-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.53:3000"
+    traefik-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.71:8080"
+    daedalus:
+      loadBalancer:
+        servers:
+          - url: "https://192.168.1.138:8006"
+        serversTransport: insecure

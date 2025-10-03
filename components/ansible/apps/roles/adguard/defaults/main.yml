@@ -1,0 +1,38 @@
+---
+adguard_version: "latest"
+adguard_docker_image: "adguard/adguardhome"
+
+adguard_bind_host: "0.0.0.0"
+adguard_bind_port: 3000
+adguard_dns_port: 53
+
+adguard_upstream_dns:
+  - "1.1.1.1"
+  - "1.0.0.1"
+  - "8.8.8.8"
+  - "8.8.4.4"
+
+adguard_bootstrap_dns:
+  - "1.1.1.1"
+  - "8.8.8.8"
+
+adguard_filtering_enabled: true
+adguard_safebrowsing_enabled: true
+adguard_parental_enabled: false
+
+adguard_statistics_interval: 24
+adguard_querylog_enabled: true
+adguard_querylog_interval: 90
+adguard_querylog_size_memory: 1000
+
+adguard_filters:
+  - name: "AdGuard DNS filter"
+    url: "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt"
+  - name: "AdAway Default Blocklist"
+    url: "https://adaway.org/hosts.txt"
+  - name: "StevenBlack Unified"
+    url: "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+  - name: "OISD Big"
+    url: "https://big.oisd.nl"
+
+adguard_dns_rewrites: []

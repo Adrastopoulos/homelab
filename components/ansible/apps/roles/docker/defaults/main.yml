@@ -1,0 +1,15 @@
+---
+# Docker container defaults
+docker_comparisons:
+  env: strict
+  labels: strict
+docker_image_name_mismatch: recreate
+docker_state: started
+docker_restart_policy: unless-stopped
+docker_pull: missing
+
+# Docker daemon configuration
+docker_log_max_size: "10m"
+docker_log_max_file: "3"
+
+docker_network: "homelab"

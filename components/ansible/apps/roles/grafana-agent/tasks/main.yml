@@ -1,0 +1,53 @@
+---
+# Grafana Agent for metrics and logs collection
+
+- name: Create Grafana Agent config directory
+  file:
+    path: /etc/grafana-agent
+    state: directory
+    mode: '0755'
+
+- name: Generate Grafana Agent configuration
+  template:
+    src: agent-config.yaml.j2
+    dest: /etc/grafana-agent/agent-config.yaml
+    mode: '0644'
+  notify: restart grafana-agent
+
+- name: Deploy Grafana Agent container
+  community.docker.docker_container:
+    name: grafana-agent
+    image: "grafana/agent:{{ grafana_agent_version | default('latest') }}"
+    state: started
+    restart_policy: unless-stopped
+    pull: yes
+
+    volumes:
+      - /etc/grafana-agent:/etc/grafana-agent
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/root:ro
+
+    command: |
+      -config.file=/etc/grafana-agent/agent-config.yaml
+      -metrics.wal-directory=/tmp/grafana-agent/wal
+
+    network_mode: host
+    pid_mode: host
+
+    env:
+      HOSTNAME: "{{ ansible_hostname }}"
+
+    capabilities:
+      - SYS_TIME
+      - SYS_ADMIN
+
+- name: Verify Grafana Agent is running
+  docker_container_info:
+    name: grafana-agent
+  register: agent_info
+  until: agent_info.container.State.Running
+  retries: 5
+  delay: 10

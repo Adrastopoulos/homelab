@@ -1,0 +1,21 @@
+---
+prometheus_version: "latest"
+prometheus_port: 9090
+prometheus_data_retention: "15d"
+prometheus_storage_path: "/opt/prometheus/data"
+prometheus_config_path: "/opt/prometheus"
+
+# Scrape configurations
+prometheus_scrape_interval: "15s"
+prometheus_evaluation_interval: "15s"
+
+# Default scrape targets
+prometheus_scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "traefik"
+    static_configs:
+      - targets: ["192.168.1.71:8080"]
+    metrics_path: "/metrics"

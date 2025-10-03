@@ -1,0 +1,7 @@
+---
+- hosts: traefik
+  become: yes
+  roles:
+    - security
+    - docker
+    - traefik

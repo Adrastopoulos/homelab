@@ -1,0 +1,25 @@
+---
+# Loki log aggregation
+
+- name: Create Loki volumes
+  community.docker.docker_volume:
+    name: loki-data
+    state: present
+
+- name: Deploy Loki container
+  community.docker.docker_container:
+    name: loki
+    image: "grafana/loki:{{ loki_version | default('latest') }}"
+    state: started
+    restart_policy: unless-stopped
+    pull: yes
+
+    volumes:
+      - loki-data:/loki
+
+    ports:
+      - "{{ loki_port | default('3100') }}:3100"
+
+    command: -config.file=/etc/loki/local-config.yaml
+
+    # Use default bridge network

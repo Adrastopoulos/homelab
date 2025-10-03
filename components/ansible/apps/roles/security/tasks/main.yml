@@ -1,0 +1,78 @@
+---
+- name: Install security packages
+  apt:
+    name:
+      - sudo
+      - fail2ban
+    state: present
+    update_cache: yes
+
+- name: Disable SSH password authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?{{ item.key }}"
+    line: "{{ item.key }} {{ item.value }}"
+    state: present
+  loop:
+    - { key: "PasswordAuthentication", value: "no" }
+    - { key: "PubkeyAuthentication", value: "yes" }
+    - { key: "ChallengeResponseAuthentication", value: "no" }
+    - { key: "PermitRootLogin", value: "prohibit-password" }
+    - { key: "PermitEmptyPasswords", value: "no" }
+    - { key: "MaxAuthTries", value: "3" }
+    - { key: "ClientAliveInterval", value: "300" }
+    - { key: "ClientAliveCountMax", value: "2" }
+  notify: restart sshd
+
+- name: Fix /etc/sudoers.d permissions
+  file:
+    path: /etc/sudoers.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+
+- name: Fix individual sudoers files permissions
+  shell: |
+    find /etc/sudoers.d -type f -exec chmod 0440 {} \;
+    find /etc/sudoers.d -type f -exec chown root:root {} \;
+  changed_when: false
+
+- name: Validate sudoers file
+  command: visudo -c
+  changed_when: false
+
+- name: Set kernel parameters for security
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/99-security.conf
+  loop:
+    - { key: "net.ipv4.tcp_syncookies", value: "1" }
+    - { key: "net.ipv4.ip_forward", value: "0" }
+    - { key: "net.ipv4.conf.all.send_redirects", value: "0" }
+    - { key: "net.ipv4.conf.default.send_redirects", value: "0" }
+    - { key: "net.ipv4.conf.all.accept_redirects", value: "0" }
+    - { key: "net.ipv4.conf.default.accept_redirects", value: "0" }
+    - { key: "net.ipv4.icmp_ignore_bogus_error_responses", value: "1" }
+
+- name: Configure fail2ban for SSH
+  copy:
+    content: |
+      [sshd]
+      enabled = true
+      port = ssh
+      filter = sshd
+      logpath = /var/log/auth.log
+      maxretry = 3
+      bantime = 3600
+    dest: /etc/fail2ban/jail.local
+    mode: "0644"
+  notify: restart fail2ban
+
+- name: Enable fail2ban
+  systemd:
+    name: fail2ban
+    enabled: yes

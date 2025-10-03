@@ -1,0 +1,58 @@
+---
+# Grafana monitoring UI
+
+- name: Create Grafana volumes
+  community.docker.docker_volume:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - grafana-data
+    - grafana-config
+
+- name: Deploy Grafana container
+  community.docker.docker_container:
+    name: grafana
+    image: "grafana/grafana:{{ grafana_version | default('latest') }}"
+    state: started
+    restart_policy: unless-stopped
+    pull: yes
+
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - grafana-config:/etc/grafana
+
+    ports:
+      - "{{ grafana_port | default('3000') }}:3000"
+
+    env:
+      GF_SERVER_ROOT_URL: "http://{{ ansible_default_ipv4.address }}:{{ grafana_port | default('3000') }}"
+      GF_SECURITY_ADMIN_USER: "{{ grafana_admin_user | default('admin') }}"
+      GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_admin_password }}"
+      GF_INSTALL_PLUGINS: "{{ grafana_plugins | default('') }}"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_LOG_MODE: "console"
+      GF_LOG_LEVEL: "{{ grafana_log_level | default('info') }}"
+
+    # Use default bridge network
+
+- name: Wait for Grafana to start
+  wait_for:
+    port: "{{ grafana_port | default('3000') }}"
+    host: "{{ ansible_default_ipv4.address }}"
+    delay: 10
+    timeout: 60
+
+- name: Configure Grafana datasources
+  uri:
+    url: "http://{{ ansible_default_ipv4.address }}:{{ grafana_port | default('3000') }}/api/datasources"
+    method: POST
+    user: "{{ grafana_admin_user | default('admin') }}"
+    password: "{{ grafana_admin_password }}"
+    force_basic_auth: yes
+    body_format: json
+    body: "{{ item }}"
+    status_code: [200, 409]  # 409 if already exists
+  loop: "{{ grafana_datasources | default([]) }}"
+  when: grafana_datasources is defined

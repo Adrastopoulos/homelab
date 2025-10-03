@@ -1,0 +1,16 @@
+---
+grafana_version: "latest"
+grafana_port: 3000
+
+grafana_plugins: ""
+
+grafana_datasources:
+  - name: "Prometheus"
+    type: "prometheus"
+    access: "proxy"
+    url: "http://prometheus:9090"
+    isDefault: true
+  - name: "Loki"
+    type: "loki"
+    access: "proxy"
+    url: "http://loki:3100"
