@@ -1,3 +1,4 @@
+---
 - name: Configure ZFS storage
   hosts: metal
   become: true

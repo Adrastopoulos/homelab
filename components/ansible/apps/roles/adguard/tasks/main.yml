@@ -1,3 +1,4 @@
+---
 - name: Create AdGuard directories
   file:
     path: "{{ item }}"
@@ -19,7 +20,7 @@
     image: "adguard/adguardhome:{{ adguard_version }}"
     state: started
     restart_policy: unless-stopped
-    pull: yes
+    pull: true
     network_mode: host
 
     volumes:

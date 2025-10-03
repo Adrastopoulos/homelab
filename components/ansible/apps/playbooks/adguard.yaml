@@ -1,6 +1,6 @@
 ---
 - hosts: adguard
-  become: yes
+  become: true
   roles:
     - security
     - docker

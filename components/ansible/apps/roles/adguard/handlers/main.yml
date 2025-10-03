@@ -1,6 +1,6 @@
 ---
-- name: restart adguard
+- name: Restart adguard
   community.docker.docker_container:
     name: adguard
     state: started
-    restart: yes
+    restart: true

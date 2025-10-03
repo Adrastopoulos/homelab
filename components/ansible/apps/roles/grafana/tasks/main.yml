@@ -15,7 +15,7 @@
     image: "grafana/grafana:{{ grafana_version | default('latest') }}"
     state: started
     restart_policy: unless-stopped
-    pull: yes
+    pull: true
 
     volumes:
       - grafana-data:/var/lib/grafana
@@ -50,9 +50,9 @@
     method: POST
     user: "{{ grafana_admin_user | default('admin') }}"
     password: "{{ grafana_admin_password }}"
-    force_basic_auth: yes
+    force_basic_auth: true
     body_format: json
     body: "{{ item }}"
-    status_code: [200, 409]  # 409 if already exists
+    status_code: [200, 409] # 409 if already exists
   loop: "{{ grafana_datasources | default([]) }}"
   when: grafana_datasources is defined

@@ -1,6 +1,6 @@
 ---
 - hosts: traefik
-  become: yes
+  become: true
   roles:
     - security
     - docker

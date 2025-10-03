@@ -1,3 +1,4 @@
+---
 - name: Disable enterprise repositories
   ansible.builtin.copy:
     content: "# deb https://enterprise.proxmox.com/debian/pve {{ ansible_distribution_release }} pve-enterprise"

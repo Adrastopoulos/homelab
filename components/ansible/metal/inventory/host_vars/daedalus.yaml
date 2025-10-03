@@ -1,3 +1,4 @@
+---
 ansible_host: 192.168.1.138
 ansible_python_interpreter: /usr/bin/python3
 
@@ -39,7 +40,7 @@ zfs_pools:
       atime: "off"
       recordsize: 8k
     pool_properties:
-      autoexpand: "on" 
+      autoexpand: "on"
 
 zfs_datasets:
   typhoeus/proxmox_iso:

@@ -5,13 +5,13 @@
   file:
     path: /etc/promtail
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Generate Promtail configuration
   template:
     src: promtail-config.yaml.j2
     dest: /etc/promtail/config.yaml
-    mode: '0644'
+    mode: "0644"
   notify: restart promtail
 
 - name: Deploy Promtail container
@@ -20,7 +20,7 @@
     image: "grafana/promtail:{{ promtail_version | default('latest') }}"
     state: started
     restart_policy: unless-stopped
-    pull: yes
+    pull: true
 
     volumes:
       - /etc/promtail:/etc/promtail

@@ -1,3 +1,4 @@
+---
 - name: Apply post-install configuration
   ansible.builtin.import_tasks: postinstall.yaml
 

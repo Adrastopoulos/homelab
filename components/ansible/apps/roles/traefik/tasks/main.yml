@@ -34,7 +34,7 @@
     image: "traefik:{{ traefik_version }}"
     state: started
     restart_policy: unless-stopped
-    pull: yes
+    pull: true
     network_mode: host
 
     volumes:

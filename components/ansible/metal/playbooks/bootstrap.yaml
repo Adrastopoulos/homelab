@@ -1,3 +1,4 @@
+---
 - name: Bootstrap Proxmox node
   hosts: metal
   become: true

@@ -12,7 +12,7 @@
     image: "grafana/loki:{{ loki_version | default('latest') }}"
     state: started
     restart_policy: unless-stopped
-    pull: yes
+    pull: true
 
     volumes:
       - loki-data:/loki

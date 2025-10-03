@@ -26,7 +26,7 @@
     image: "prom/prometheus:{{ prometheus_version }}"
     state: started
     restart_policy: unless-stopped
-    pull: yes
+    pull: true
 
     ports:
       - "{{ prometheus_port }}:9090"

@@ -5,7 +5,7 @@
       - sudo
       - fail2ban
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Disable SSH password authentication
   lineinfile:
@@ -47,7 +47,7 @@
     name: "{{ item.key }}"
     value: "{{ item.value }}"
     state: present
-    reload: yes
+    reload: true
     sysctl_file: /etc/sysctl.d/99-security.conf
   loop:
     - { key: "net.ipv4.tcp_syncookies", value: "1" }
@@ -75,4 +75,4 @@
 - name: Enable fail2ban
   systemd:
     name: fail2ban
-    enabled: yes
+    enabled: true

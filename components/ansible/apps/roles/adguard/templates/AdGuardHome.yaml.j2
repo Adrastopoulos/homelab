@@ -4,6 +4,7 @@ http:
     enabled: false
   address: {{ adguard_bind_host }}:{{ adguard_bind_port }}
   session_ttl: 720h
+
 users:
   - name: {{ adguard_username }}
     password: {{ adguard_password | password_hash('bcrypt') }}
@@ -12,6 +13,7 @@ block_auth_min: 15
 http_proxy: ""
 language: ""
 theme: auto
+
 dns:
   bind_hosts:
     - {{ adguard_bind_host }}
@@ -21,14 +23,14 @@ dns:
   ratelimit_whitelist: []
   refuse_any: true
   upstream_dns:
-{% for dns in adguard_upstream_dns %}
+  {% for dns in adguard_upstream_dns %}
     - {{ dns }}
-{% endfor %}
+  {% endfor %}
   upstream_dns_file: ""
   bootstrap_dns:
-{% for dns in adguard_bootstrap_dns %}
+  {% for dns in adguard_bootstrap_dns %}
     - {{ dns }}
-{% endfor %}
+  {% endfor %}
   all_servers: false
   fastest_addr: false
   fastest_timeout: 1s
@@ -73,6 +75,7 @@ dns:
   dns64_prefixes: []
   serve_http3: false
   use_http3_upstreams: false
+
 tls:
   enabled: false
   server_name: ""
@@ -88,31 +91,35 @@ tls:
   certificate_path: ""
   private_key_path: ""
   strict_sni_check: false
+
 querylog:
   enabled: {{ adguard_querylog_enabled | lower }}
   file_enabled: true
   interval: {{ adguard_querylog_interval * 24 }}h
   size_memory: {{ adguard_querylog_size_memory }}
   ignored: []
+
 statistics:
   enabled: true
   interval: {{ adguard_statistics_interval }}h
   ignored: []
+
 filters:
-{% for filter in adguard_filters %}
-  - enabled: true
-    url: {{ filter.url }}
-    name: {{ filter.name }}
-    id: {{ loop.index }}
-{% endfor %}
+  {% for filter in adguard_filters %}
+    - enabled: true
+      url: {{ filter.url }}
+      name: {{ filter.name }}
+      id: {{ loop.index }}
+  {% endfor %}
+
 whitelist_filters: []
 user_rules: []
 filtering:
   rewrites:
-{% for rewrite in adguard_dns_rewrites %}
-    - domain: "{{ rewrite.domain }}"
-      answer: "{{ rewrite.answer }}"
-{% endfor %}
+    {% for rewrite in adguard_dns_rewrites %}
+      - domain: "{{ rewrite.domain }}"
+        answer: "{{ rewrite.answer }}"
+    {% endfor %}
 clients:
   runtime_sources:
     whois: true
@@ -121,6 +128,7 @@ clients:
     dhcp: true
     hosts: true
   persistent: []
+
 log_file: ""
 log_max_backups: 0
 log_max_size: 100
@@ -128,8 +136,10 @@ log_max_age: 3
 log_compress: false
 log_localtime: false
 verbose: false
+
 os:
   group: ""
   user: ""
   rlimit_nofile: 0
+
 schema_version: 29

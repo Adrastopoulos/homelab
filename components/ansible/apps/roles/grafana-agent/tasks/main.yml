@@ -1,17 +1,15 @@
 ---
-# Grafana Agent for metrics and logs collection
-
 - name: Create Grafana Agent config directory
   file:
     path: /etc/grafana-agent
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Generate Grafana Agent configuration
   template:
     src: agent-config.yaml.j2
     dest: /etc/grafana-agent/agent-config.yaml
-    mode: '0644'
+    mode: "0644"
   notify: restart grafana-agent
 
 - name: Deploy Grafana Agent container
@@ -20,7 +18,7 @@
     image: "grafana/agent:{{ grafana_agent_version | default('latest') }}"
     state: started
     restart_policy: unless-stopped
-    pull: yes
+    pull: true
 
     volumes:
       - /etc/grafana-agent:/etc/grafana-agent

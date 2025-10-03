@@ -1,3 +1,4 @@
+---
 - name: Gather existing ZFS pools
   ansible.builtin.command: zpool list -H -o name
   register: existing_zpools
@@ -51,13 +52,10 @@
 
 - name: Register Proxmox dir storage entries
   ansible.builtin.command: >-
-    pvesm add {{ item.value.type }} {{ item.value.id }}
-    --path {{ item.value.path }}
-    --content {{ item.value.content }}
+    pvesm add {{ item.value.type }} {{ item.value.id }} --path {{ item.value.path }} --content {{ item.value.content }}
   register: pvesm_add_result
   failed_when: >-
-    pvesm_add_result.rc not in [0, 255]
-    or (pvesm_add_result.rc == 255 and 'already defined' not in pvesm_add_result.stderr)
+    pvesm_add_result.rc not in [0, 255] or (pvesm_add_result.rc == 255 and 'already defined' not in pvesm_add_result.stderr)
   changed_when: pvesm_add_result.rc == 0
   loop: "{{ proxmox_storage | dict2items }}"
   when:
@@ -68,13 +66,10 @@
 
 - name: Register Proxmox zfspool storage entries
   ansible.builtin.command: >-
-    pvesm add {{ item.value.type }} {{ item.value.id }}
-    --pool {{ item.value.pool }}
-    --content {{ item.value.content }}
+    pvesm add {{ item.value.type }} {{ item.value.id }} --pool {{ item.value.pool }} --content {{ item.value.content }}
   register: pvesm_add_zfs_result
   failed_when: >-
-    pvesm_add_zfs_result.rc not in [0, 255]
-    or (pvesm_add_zfs_result.rc == 255 and 'already defined' not in pvesm_add_zfs_result.stderr)
+    pvesm_add_zfs_result.rc not in [0, 255] or (pvesm_add_zfs_result.rc == 255 and 'already defined' not in pvesm_add_zfs_result.stderr)
   changed_when: pvesm_add_zfs_result.rc == 0
   loop: "{{ proxmox_storage | dict2items }}"
   when:

@@ -1,3 +1,4 @@
+---
 - name: Restart loki
   community.docker.docker_container:
     name: loki

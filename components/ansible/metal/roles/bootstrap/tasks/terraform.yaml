@@ -1,3 +1,4 @@
+---
 - name: Check Terraform user
   ansible.builtin.shell: pveum user list | grep -qw 'terraform@pve'
   register: terraform_user
@@ -6,7 +7,7 @@
   run_once: true
 
 - name: Create Terraform user
-  ansible.builtin.shell: pveum user add terraform@pve
+  ansible.builtin.command: pveum user add terraform@pve
   when: terraform_user.rc != 0
   run_once: true
 
@@ -32,7 +33,7 @@
   run_once: true
 
 - name: Assign Terraform role
-  ansible.builtin.shell: pveum aclmod / -user terraform@pve -role Terraform
+  ansible.builtin.command: pveum aclmod / -user terraform@pve -role Terraform
   when: terraform_acl.rc != 0
   run_once: true
 
@@ -44,7 +45,7 @@
   run_once: true
 
 - name: Create Terraform API token
-  ansible.builtin.shell: pveum user token add terraform@pve provider --privsep=0 --output-format=json
+  ansible.builtin.command: pveum user token add terraform@pve provider --privsep=0 --output-format=json
   when: terraform_token.rc != 0
   register: terraform_raw_token
   run_once: true
